@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
+// my comment POP
+
 namespace IceCreamRatings
 {
     public static class GetRating
