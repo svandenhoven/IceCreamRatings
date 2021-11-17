@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -8,21 +9,19 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-// my comment POP
-
 namespace IceCreamRatings
 {
-    public static class GetRating
+    public static class GetRatings
     {
-        [FunctionName("GetRating")]
-        public static async Task<IActionResult> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "GetRating/{id}")]
+        [FunctionName("GetRatings")]
+        public static async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "GetRatings/{userId}")]
                 HttpRequest req,
             [CosmosDB(
                 databaseName: "Icecream",
                 collectionName: "Ratings",
                 ConnectionStringSetting = "CosmosDbConnectionString",
-                SqlQuery = "SELECT * FROM c Where c.id = {id}")]
+                SqlQuery = "SELECT * FROM c Where c.userId = {userId}")]
                 IEnumerable<Rating> ratings,
             ILogger log)
         {
@@ -31,8 +30,6 @@ namespace IceCreamRatings
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-
-            // return ratings.() ? new OkObjectResult(ratings) : new NotFoundObjectResult() ;
 
             var r = (List<Rating>)ratings;
             if (r.Count == 0)
@@ -43,6 +40,7 @@ namespace IceCreamRatings
             {
                 return new OkObjectResult(ratings);
             }
+
         }
     }
 }
